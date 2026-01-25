@@ -1,10 +1,16 @@
-// Smooth scroll for navbar links
+// Smooth scroll
 document.querySelectorAll(".js-scroll-trigger").forEach((link) => {
   link.addEventListener("click", function (e) {
     e.preventDefault();
     const targetId = this.getAttribute("href");
     const target = document.querySelector(targetId);
     target.scrollIntoView({ behavior: "smooth" });
+
+    // Close navbar on mobile after click
+    const navbarCollapse = document.getElementById("navbarResponsive");
+    if (navbarCollapse.classList.contains("show")) {
+      new bootstrap.Collapse(navbarCollapse).toggle();
+    }
   });
 });
 
@@ -23,7 +29,6 @@ function setTheme(mode) {
   }
 }
 
-// Load saved theme
 const savedTheme = localStorage.getItem("theme") || "light";
 setTheme(savedTheme);
 
@@ -35,7 +40,7 @@ themeToggle.addEventListener("click", () => {
   }
 });
 
-// Contact Form (Message send simulation ✅)
+// Contact Form (UI message ✅)
 const contactForm = document.getElementById("contactForm");
 const formStatus = document.getElementById("formStatus");
 
@@ -47,12 +52,13 @@ contactForm.addEventListener("submit", function (e) {
   const message = document.getElementById("message").value.trim();
 
   if (!name || !email || !message) {
-    formStatus.innerHTML = `<div class="alert alert-danger">❌ Please fill all fields</div>`;
+    formStatus.innerHTML = `<div class="alert alert-danger">❌ Please fill all fields.</div>`;
     return;
   }
 
-  // ✅ Here you can connect EmailJS / Formspree
-  formStatus.innerHTML = `<div class="alert alert-success">✅ Message sent successfully! Thank you ${name} 😄</div>`;
-
+  formStatus.innerHTML = `<div class="alert alert-success">✅ Message sent successfully! Thank you <b>${name}</b> 😄</div>`;
   contactForm.reset();
 });
+
+// Current year
+document.getElementById("year").innerText = new Date().getFullYear();
