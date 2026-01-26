@@ -1,4 +1,4 @@
-// Smooth scroll
+// ✅ Smooth scroll
 document.querySelectorAll(".js-scroll-trigger").forEach((link) => {
   link.addEventListener("click", function (e) {
     e.preventDefault();
@@ -10,7 +10,7 @@ document.querySelectorAll(".js-scroll-trigger").forEach((link) => {
       target.scrollIntoView({ behavior: "smooth" });
     }
 
-    // Close navbar on mobile after click
+    // ✅ Close navbar on mobile
     const navbarCollapse = document.getElementById("navbarResponsive");
     if (navbarCollapse.classList.contains("show")) {
       new bootstrap.Collapse(navbarCollapse).toggle();
@@ -18,7 +18,7 @@ document.querySelectorAll(".js-scroll-trigger").forEach((link) => {
   });
 });
 
-// Dark Mode Toggle ✅
+// ✅ Dark Mode Toggle
 const themeToggle = document.getElementById("themeToggle");
 
 function setTheme(mode) {
@@ -33,7 +33,6 @@ function setTheme(mode) {
   }
 }
 
-// Load saved theme
 const savedTheme = localStorage.getItem("theme") || "light";
 setTheme(savedTheme);
 
@@ -45,11 +44,24 @@ themeToggle.addEventListener("click", () => {
   }
 });
 
-// Contact Form (Message UI ✅)
+// ✅ Current year
+document.getElementById("year").innerText = new Date().getFullYear();
+
+/* ==========================
+   ✅ EmailJS CONTACT FORM ✅
+========================== */
+const EMAILJS_PUBLIC_KEY = "GAJReNTtQCcA8Jlxp";
+const EMAILJS_SERVICE_ID = "service_xsnidf5";
+const EMAILJS_TEMPLATE_ID = "template_tsr35hf";
+
+// ✅ Init EmailJS
+emailjs.init(EMAILJS_PUBLIC_KEY);
+
 const contactForm = document.getElementById("contactForm");
 const formStatus = document.getElementById("formStatus");
+const sendBtn = document.getElementById("sendBtn");
 
-contactForm.addEventListener("submit", function (e) {
+contactForm.addEventListener("submit", async function (e) {
   e.preventDefault();
 
   const name = document.getElementById("name").value.trim();
@@ -61,9 +73,25 @@ contactForm.addEventListener("submit", function (e) {
     return;
   }
 
-  formStatus.innerHTML = `<div class="alert alert-success">✅ Message sent successfully! Thank you <b>${name}</b> 😄</div>`;
-  contactForm.reset();
-});
+  try {
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Sending...`;
 
-// Current year
-document.getElementById("year").innerText = new Date().getFullYear();
+    // ✅ Match your EmailJS template variables: {{name}}, {{email}}, {{message}}, {{title}}
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      title: "Portfolio Contact Message",
+      name: name,
+      email: email,
+      message: message,
+    });
+
+    formStatus.innerHTML = `<div class="alert alert-success">✅ Message sent successfully! I will contact you soon 😄</div>`;
+    contactForm.reset();
+  } catch (error) {
+    console.log("EmailJS Error:", error);
+    formStatus.innerHTML = `<div class="alert alert-danger">❌ Failed to send message. Please try again!</div>`;
+  } finally {
+    sendBtn.disabled = false;
+    sendBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Send Message`;
+  }
+});
