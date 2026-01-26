@@ -2,9 +2,13 @@
 document.querySelectorAll(".js-scroll-trigger").forEach((link) => {
   link.addEventListener("click", function (e) {
     e.preventDefault();
+
     const targetId = this.getAttribute("href");
     const target = document.querySelector(targetId);
-    target.scrollIntoView({ behavior: "smooth" });
+
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
 
     // Close navbar on mobile after click
     const navbarCollapse = document.getElementById("navbarResponsive");
@@ -29,6 +33,7 @@ function setTheme(mode) {
   }
 }
 
+// Load saved theme
 const savedTheme = localStorage.getItem("theme") || "light";
 setTheme(savedTheme);
 
@@ -40,7 +45,7 @@ themeToggle.addEventListener("click", () => {
   }
 });
 
-// Contact Form (UI message ✅)
+// Contact Form (Message UI ✅)
 const contactForm = document.getElementById("contactForm");
 const formStatus = document.getElementById("formStatus");
 
